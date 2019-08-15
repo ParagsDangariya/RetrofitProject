@@ -26,8 +26,11 @@ public class MainActivity extends AppCompatActivity {
 
         Getdataservice service = RetrofitInstance.getRetrofitInstance().create(Getdataservice.class);
 
-        Call<List<Pokemon>> call = service.getPokemons();
-        call.enqueue(new Callback<List<Pokemon>>() {
+
+
+
+        //Call<List<Pokemon>> call = service.getPokemons();
+       /* call.enqueue(new Callback<List<Pokemon>>() {
             @Override
             public void onResponse(Call<List<Pokemon>> call, Response<List<Pokemon>> response) {
 
@@ -42,11 +45,41 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Something went wrong!!!",Toast.LENGTH_SHORT).show();
 
             }
+        });*/
+       // starting from Json object
+        Call<Pokemonpojo> call = service.getPokemonsObj();
+
+        call.enqueue(new Callback<Pokemonpojo>() {
+            @Override
+            public void onResponse(Call<Pokemonpojo> call, Response<Pokemonpojo> response) {
+                ArrayList<Pokemon> pokarray = new ArrayList<>();
+
+                Pokemonpojo pokojo = response.body();
+
+                try{
+                    pokarray =new ArrayList<>(pokojo.getPokemon());
+                    generateData(pokarray);
+
+                }catch(NullPointerException e){
+                    System.out.println(e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Pokemonpojo> call, Throwable t) {
+
+                Toast.makeText(getApplicationContext(),"Something went wrong!!!",Toast.LENGTH_SHORT).show();
+            }
         });
+
+
     }
 
-    public void generateData(List<Pokemon> poklist){
-        ArrayList<Pokemon> pokes = (ArrayList<Pokemon>) poklist;
+    public void generateData(ArrayList<Pokemon> pokes/*List<Pokemon>poklist*/){
+
+
+        //ArrayList<Pokemon> pokes = (ArrayList<Pokemon>) poklist;
 
         adapt = new Recycleadapter(pokes,getApplicationContext());
 
