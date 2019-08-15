@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Pokemon>> call, Response<List<Pokemon>> response) {
 
+                System.out.println(response.body());
+                generateData(response.body());
+
             }
 
             @Override
